@@ -12,12 +12,21 @@ var lanePosition = [-2.0,0.0, 2.0]
 
 func _on_spawn_timer_timeout() -> void:
 	var obstacleScene = ObstacleScene[randi() % ObstacleScene.size()]
-	var openLane = randi() % 3
-	for i in range(3):
-		if i != openLane:
-			var obstacle = obstacleScene.instantiate()
-			obstacle.position = Vector3(lanePosition[i], 0,SpawnDistance)
-			$ObstacleContainer.add_child(obstacle)
+	var currentOB = obstacleScene.instantiate()
+	
+	if currentOB.CurrentObstacleType == Obstacle.ObstacleType.LOW:
+		var obstacle = obstacleScene.instantiate()
+		obstacle.position = Vector3(0, 0,SpawnDistance)
+		$ObstacleContainer.add_child(obstacle)
+		currentOB.queue_free()
+	else:
+		var openLane = randi() % 3
+		for i in range(3):
+			if i != openLane:
+				var obstacle = obstacleScene.instantiate()
+				obstacle.position = Vector3(lanePosition[i], 0,SpawnDistance)
+				$ObstacleContainer.add_child(obstacle)
+		currentOB.queue_free()
 
 
 func _on_score_timer_timeout() -> void:

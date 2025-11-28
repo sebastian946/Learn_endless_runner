@@ -28,6 +28,7 @@ func _physics_process(delta: float) -> void:
 		targetLane += 1
 	if Input.is_action_just_pressed("ui_left") and targetLane > Lane.RIGHT:
 		targetLane -= 1
-	
+	if Input.is_action_just_pressed("ui_down") and is_on_floor():
+		$StandingCollision.disabled = true
 
 	move_and_slide()

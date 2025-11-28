@@ -1,4 +1,5 @@
 extends StaticBody3D
+class_name Obstacle
 
 enum ObstacleType {STANDARD,LOW,HIGH}
 @export var CurrentObstacleType : ObstacleType = ObstacleType.STANDARD
