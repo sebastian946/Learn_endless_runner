@@ -1,0 +1,78 @@
+[gd_scene load_steps=9 format=3 uid="uid://blljswsk5sc4o"]
+
+[ext_resource type="Script" uid="uid://chcpnijcsm2ik" path="res://Scenes/GameManager.gd" id="1_kln2b"]
+[ext_resource type="Script" uid="uid://bsm7te63qn5ct" path="res://Scenes/player.gd" id="1_r150o"]
+[ext_resource type="PackedScene" uid="uid://cx5woti4g3xt1" path="res://Scenes/obstacle/standar_obstacle.tscn" id="2_idj7w"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_c1w88"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_r150o"]
+sky_material = SubResource("ProceduralSkyMaterial_c1w88")
+
+[sub_resource type="Environment" id="Environment_idj7w"]
+background_mode = 2
+sky = SubResource("Sky_r150o")
+tonemap_mode = 2
+ssao_enabled = true
+glow_enabled = true
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_c1w88"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c1w88"]
+size = Vector3(10, 0.5, 200)
+
+[node name="GameManager" type="Node3D"]
+script = ExtResource("1_kln2b")
+ObstacleScene = Array[PackedScene]([ExtResource("2_idj7w")])
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_idj7w")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0085671, 0)
+script = ExtResource("1_r150o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+shape = SubResource("CapsuleShape3D_c1w88")
+
+[node name="Model" type="Node3D" parent="Player"]
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Player/Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.36987305, 0)
+radius = 0.36376953
+height = 1.2602539
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Player/Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46129632, 0)
+radius = 0.39595252
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881907, 0, -0.25881907, 0.9659258, 0, 1.0283673, 4.403399)
+
+[node name="Enviorement" type="Node3D" parent="."]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Enviorement"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2583598, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Enviorement/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -67.99776)
+size = Vector3(10, 0.5, 200)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enviorement/StaticBody3D"]
+shape = SubResource("BoxShape3D_c1w88")
+
+[node name="ObstacleContainer" type="Node3D" parent="."]
+
+[node name="SpawnTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
