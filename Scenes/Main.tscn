@@ -1,9 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://blljswsk5sc4o"]
+[gd_scene load_steps=13 format=3 uid="uid://blljswsk5sc4o"]
 
 [ext_resource type="Script" uid="uid://chcpnijcsm2ik" path="res://Scenes/GameManager.gd" id="1_kln2b"]
 [ext_resource type="Script" uid="uid://bsm7te63qn5ct" path="res://Scenes/player.gd" id="1_r150o"]
 [ext_resource type="PackedScene" uid="uid://cx5woti4g3xt1" path="res://Scenes/obstacle/standar_obstacle.tscn" id="2_idj7w"]
 [ext_resource type="PackedScene" uid="uid://ie84wadau2xh" path="res://Scenes/obstacle/lower_obstacle.tscn" id="3_rgh2o"]
+[ext_resource type="PackedScene" uid="uid://cdy1ci68hs0ib" path="res://Scenes/obstacle/upper_obstacle.tscn" id="4_pbw6q"]
+[ext_resource type="Script" uid="uid://dstwyjtqxa5ka" path="res://Scenes/ui_manager.gd" id="6_v1gob"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_c1w88"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -25,14 +27,14 @@ height = 1.8300781
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rgh2o"]
 radius = 0.47027588
-height = 0.95095825
+height = 1.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c1w88"]
 size = Vector3(10, 0.5, 200)
 
 [node name="GameManager" type="Node3D"]
 script = ExtResource("1_kln2b")
-ObstacleScene = Array[PackedScene]([ExtResource("2_idj7w"), ExtResource("3_rgh2o")])
+ObstacleScene = Array[PackedScene]([ExtResource("2_idj7w"), ExtResource("3_rgh2o"), ExtResource("4_pbw6q")])
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_idj7w")
@@ -67,6 +69,25 @@ radius = 0.39595252
 [node name="Camera3D" type="Camera3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881907, 0, -0.25881907, 0.9659258, 0, 2.5145457, 5.9060993)
 
+[node name="UI Manager" type="Control" parent="Player"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_v1gob")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Player/UI Manager"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -270.0
+offset_bottom = 78.0
+grow_horizontal = 0
+text = "Score:"
+
 [node name="Enviorement" type="Node3D" parent="."]
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Enviorement"]
@@ -85,6 +106,8 @@ shape = SubResource("BoxShape3D_c1w88")
 autostart = true
 
 [node name="ScoreTimer" type="Timer" parent="."]
+autostart = true
 
+[connection signal="ScoreUpdated" from="." to="Player/UI Manager" method="_on_game_manager_score_updated"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
 [connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
