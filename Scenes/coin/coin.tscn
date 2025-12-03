@@ -22,3 +22,5 @@ material = SubResource("StandardMaterial3D_iat35")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0070602894, 0.70215034, -0.00029540062)
 shape = SubResource("BoxShape3D_ivw3j")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

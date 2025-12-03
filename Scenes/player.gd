@@ -53,7 +53,7 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_power_up_collider_area_entered(area: Area3D) -> void:
-	if area is Pickup:
+	if area is Pickupable:
 		AddScore.emit(area.Score)
 		
 	pass # Replace with function body.
