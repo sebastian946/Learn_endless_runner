@@ -1,5 +1,6 @@
 extends CharacterBody3D
 
+signal AddScore(score:int)
 
 @export var Speed = 10.0
 @export var JumpVelocity = 4.5
@@ -49,3 +50,10 @@ func _physics_process(delta: float) -> void:
 			$StandingCollision.disabled = false
 
 	move_and_slide()
+
+
+func _on_power_up_collider_area_entered(area: Area3D) -> void:
+	if area is Pickup:
+		AddScore.emit(area.Score)
+		
+	pass # Replace with function body.

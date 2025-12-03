@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://blljswsk5sc4o"]
+[gd_scene load_steps=15 format=3 uid="uid://blljswsk5sc4o"]
 
 [ext_resource type="Script" uid="uid://chcpnijcsm2ik" path="res://Scenes/GameManager.gd" id="1_kln2b"]
 [ext_resource type="Script" uid="uid://bsm7te63qn5ct" path="res://Scenes/player.gd" id="1_r150o"]
 [ext_resource type="PackedScene" uid="uid://cx5woti4g3xt1" path="res://Scenes/obstacle/standar_obstacle.tscn" id="2_idj7w"]
 [ext_resource type="PackedScene" uid="uid://ie84wadau2xh" path="res://Scenes/obstacle/lower_obstacle.tscn" id="3_rgh2o"]
 [ext_resource type="PackedScene" uid="uid://cdy1ci68hs0ib" path="res://Scenes/obstacle/upper_obstacle.tscn" id="4_pbw6q"]
+[ext_resource type="PackedScene" uid="uid://cwrwekueeraah" path="res://Scenes/coin/coin.tscn" id="5_jw32o"]
 [ext_resource type="Script" uid="uid://dstwyjtqxa5ka" path="res://Scenes/ui_manager.gd" id="6_v1gob"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_c1w88"]
@@ -29,12 +30,16 @@ height = 1.8300781
 radius = 0.47027588
 height = 1.0
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jw32o"]
+height = 1.9592285
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_c1w88"]
 size = Vector3(10, 0.5, 200)
 
 [node name="GameManager" type="Node3D"]
 script = ExtResource("1_kln2b")
 ObstacleScene = Array[PackedScene]([ExtResource("2_idj7w"), ExtResource("3_rgh2o"), ExtResource("4_pbw6q")])
+PowerUpScene = Array[PackedScene]([ExtResource("5_jw32o")])
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_idj7w")
@@ -88,6 +93,12 @@ offset_bottom = 78.0
 grow_horizontal = 0
 text = "Score:"
 
+[node name="PowerUpCollider" type="Area3D" parent="Player"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/PowerUpCollider"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.14611816, 0)
+shape = SubResource("CapsuleShape3D_jw32o")
+
 [node name="Enviorement" type="Node3D" parent="."]
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Enviorement"]
@@ -109,5 +120,7 @@ autostart = true
 autostart = true
 
 [connection signal="ScoreUpdated" from="." to="Player/UI Manager" method="_on_game_manager_score_updated"]
+[connection signal="AddScore" from="Player" to="." method="_on_player_add_score"]
+[connection signal="area_entered" from="Player/PowerUpCollider" to="Player" method="_on_power_up_collider_area_entered"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
 [connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
